@@ -1,3 +1,5 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 import pygame
 import random
 from enum import Enum
@@ -77,7 +79,7 @@ class SnakeGameEnv:
         #place new food or just move
         if self.head == self.food:
             self.score += 1
-            self.reward = 10
+            reward = 10
             self._place_food()
         else:
             self.snake.pop()
@@ -91,7 +93,7 @@ class SnakeGameEnv:
         
         if pt == None:
             pt = self.head
-        if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or self.head.y > self.h - BLOCK_SIZE or pt.y < 0:
+        if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
             return True
         # hits itself
         if self.head in self.snake[1:]:
@@ -126,6 +128,8 @@ class SnakeGameEnv:
             next_idx = (idx - 1) % 4
             new_dir = clock_wise[next_idx]
         
+        self.direction = new_dir
+
         x = self.head.x
         y = self.head.y
         if self.direction == Direction.RIGHT:
